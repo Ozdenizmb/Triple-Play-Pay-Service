@@ -1,0 +1,16 @@
+logging:
+  level: INFO
+  loggers:
+    com.user: DEBUG
+
+database:
+  driverClass: org.postgresql.Driver
+  user: postgres
+  password: 159753
+  url: jdbc:postgresql://localhost:5432/payment_api_learning
+
+flyway:
+  configuration:
+    flyway.postgresql.transactional.lock: false
+  locations:
+    - db/migration
