@@ -1,6 +1,6 @@
-# User
+# Payment
 
-How to start the User application
+How to start the Payment application
 ---
 
 1. Run `./gradlew clean build` to build your application
