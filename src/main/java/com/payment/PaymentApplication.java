@@ -1,5 +1,7 @@
 package com.payment;
 
+import com.payment.controller.PaymentController;
+import com.payment.service.impl.PaymentServiceImpl;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
@@ -17,6 +19,10 @@ public class PaymentApplication extends Application<PaymentConfiguration> {
 
     @Override
     public void run(PaymentConfiguration configuration, Environment environment) throws Exception {
+        System.out.println("************"+configuration.getTriplePlayPayApi());
+        final PaymentServiceImpl paymentService = new PaymentServiceImpl(configuration.getTriplePlayPayApi().getUrl(), configuration.getTriplePlayPayApi().getApiKey());
 
+        final PaymentController paymentController = new PaymentController(paymentService);
+        environment.jersey().register(paymentController);
     }
 }

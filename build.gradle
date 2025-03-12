@@ -5,21 +5,33 @@ plugins {
 group = 'com.payment'
 version = '1.0-SNAPSHOT'
 
+processResources {
+    filesMatching("**/application-local.yml") {
+        expand([
+                triplePlayPayId: triplePlayPayId,
+                triplePlayPayApiKey: triplePlayPayApiKey,
+                triplePlayPayPublicApiKey: triplePlayPayPublicApiKey
+        ])
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'io.dropwizard:dropwizard-core'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
-    implementation 'jakarta.validation:jakarta.validation-api'
-    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'io.dropwizard:dropwizard-core'
     implementation 'io.dropwizard:dropwizard-jdbi3:4.0.12'
-    implementation 'org.postgresql:postgresql:42.7.5'
     implementation('io.dropwizard.modules:dropwizard-flyway:4.0.1-2') {
         exclude group: 'org.flywaydb', module: 'flyway-core'
     }
+    implementation 'jakarta.validation:jakarta.validation-api'
     implementation 'org.flywaydb:flyway-core:9.22.3'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'org.postgresql:postgresql:42.7.5'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

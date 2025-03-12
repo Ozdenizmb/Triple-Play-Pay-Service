@@ -14,3 +14,9 @@ flyway:
     flyway.postgresql.transactional.lock: false
   locations:
     - db/migration
+
+triplePlayPayApi:
+  url: "https://sandbox.tripleplaypay.com/api"
+  id: ${triplePlayPayId}
+  apiKey: ${triplePlayPayApiKey}
+  publicApiKey: ${triplePlayPayPublicApiKey}
