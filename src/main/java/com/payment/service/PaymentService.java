@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface PaymentService {
 
-    ApiResponse<ProcessedTransaction> refundPayment(UUID transactionId);
+    ApiResponse<ProcessedTransaction> voidPayment(UUID transactionId);
 
 }

@@ -67,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ApiResponse<ProcessedTransaction> refundPayment(UUID transactionId) {
+    public ApiResponse<ProcessedTransaction> voidPayment(UUID transactionId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", transactionId.toString());
         return performPost("void", requestBody, new GenericType<>() {});

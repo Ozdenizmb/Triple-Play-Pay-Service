@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface PaymentApi {
 
     @POST
-    @Path("/refund/{transaction-id}")
-    Response refundPayment(@PathParam("transaction-id") UUID transactionId);
+    @Path("/void/{transaction-id}")
+    Response voidPayment(@PathParam("transaction-id") UUID transactionId);
 
 }

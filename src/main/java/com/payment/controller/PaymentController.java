@@ -17,8 +17,8 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
-    public Response refundPayment(UUID transactionId) {
-        ApiResponse<ProcessedTransaction> apiResponse = paymentService.refundPayment(transactionId);
+    public Response voidPayment(UUID transactionId) {
+        ApiResponse<ProcessedTransaction> apiResponse = paymentService.voidPayment(transactionId);
         return Response.ok(apiResponse).build();
     }
 
