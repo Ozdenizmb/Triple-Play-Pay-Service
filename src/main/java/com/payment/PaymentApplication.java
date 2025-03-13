@@ -19,7 +19,6 @@ public class PaymentApplication extends Application<PaymentConfiguration> {
 
     @Override
     public void run(PaymentConfiguration configuration, Environment environment) throws Exception {
-        System.out.println("************"+configuration.getTriplePlayPayApi());
         final PaymentServiceImpl paymentService = new PaymentServiceImpl(configuration.getTriplePlayPayApi().getUrl(), configuration.getTriplePlayPayApi().getApiKey());
 
         final PaymentController paymentController = new PaymentController(paymentService);

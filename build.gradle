@@ -7,11 +7,7 @@ version = '1.0-SNAPSHOT'
 
 processResources {
     filesMatching("**/application-local.yml") {
-        expand([
-                triplePlayPayId: triplePlayPayId,
-                triplePlayPayApiKey: triplePlayPayApiKey,
-                triplePlayPayPublicApiKey: triplePlayPayPublicApiKey
-        ])
+        expand(project.properties)
     }
 }
 
