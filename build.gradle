@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'io.dropwizard:dropwizard-core'
     implementation 'io.dropwizard:dropwizard-jdbi3:4.0.12'

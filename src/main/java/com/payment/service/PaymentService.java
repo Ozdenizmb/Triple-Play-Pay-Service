@@ -5,6 +5,6 @@ import com.payment.model.ProcessedTransaction;
 
 public interface PaymentService {
 
-    ApiResponse<ProcessedTransaction> getEventsForPayment();
+    ApiResponse<ProcessedTransaction> refundPayment();
 
 }
