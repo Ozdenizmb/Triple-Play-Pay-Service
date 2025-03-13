@@ -67,10 +67,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ApiResponse<ProcessedTransaction> refundPayment() {
-        UUID transactionId = UUID.fromString("844fc958-783b-4b31-9282-771ff1a4d31e");
+    public ApiResponse<ProcessedTransaction> refundPayment(UUID transactionId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", transactionId.toString());
-        return performPost("void", requestBody, new GenericType<ApiResponse<ProcessedTransaction>>() {});
+        return performPost("void", requestBody, new GenericType<>() {});
     }
 }

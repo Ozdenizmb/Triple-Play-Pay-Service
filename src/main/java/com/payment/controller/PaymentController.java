@@ -6,6 +6,8 @@ import com.payment.model.ProcessedTransaction;
 import com.payment.service.PaymentService;
 import jakarta.ws.rs.core.Response;
 
+import java.util.UUID;
+
 public class PaymentController implements PaymentApi {
 
     private final PaymentService paymentService;
@@ -15,8 +17,8 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
-    public Response refundPayment() {
-        ApiResponse<ProcessedTransaction> apiResponse = paymentService.refundPayment();
+    public Response refundPayment(UUID transactionId) {
+        ApiResponse<ProcessedTransaction> apiResponse = paymentService.refundPayment(transactionId);
         return Response.ok(apiResponse).build();
     }
 
