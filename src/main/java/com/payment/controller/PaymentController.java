@@ -3,6 +3,7 @@ package com.payment.controller;
 import com.payment.api.PaymentApi;
 import com.payment.model.ApiResponse;
 import com.payment.model.ProcessedTransaction;
+import com.payment.model.request.ChargeRequest;
 import com.payment.service.PaymentService;
 import jakarta.ws.rs.core.Response;
 
@@ -14,6 +15,12 @@ public class PaymentController implements PaymentApi {
 
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
+    }
+
+    @Override
+    public Response chargePayment(ChargeRequest chargeRequest) {
+        ApiResponse<ProcessedTransaction> apiResponse = paymentService.chargePayment(chargeRequest);
+        return Response.ok(apiResponse).build();
     }
 
     @Override

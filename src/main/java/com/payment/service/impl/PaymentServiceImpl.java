@@ -6,6 +6,7 @@ import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import com.payment.exception.ApiException;
 import com.payment.model.ApiResponse;
 import com.payment.model.ProcessedTransaction;
+import com.payment.model.request.ChargeRequest;
 import com.payment.service.PaymentService;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -42,8 +43,8 @@ public class PaymentServiceImpl implements PaymentService {
         Invocation.Builder builder = target
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", apiKey);
-        System.out.println("ApiKey: " + apiKey);
-        System.out.println("Path:" + target.getUri());
+
+        System.out.println("You sent a request to this path:" + target.getUri());
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonBody;
@@ -64,6 +65,17 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         return response.readEntity(responseType);
+    }
+
+    @Override
+    public ApiResponse<ProcessedTransaction> chargePayment(ChargeRequest chargeRequest) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("amount", chargeRequest.getAmount());
+        requestBody.put("cc", chargeRequest.getCreditCardNumber());
+        requestBody.put("mm", chargeRequest.getExpirationMonth());
+        requestBody.put("yy", chargeRequest.getExpirationYear());
+        requestBody.put("cvv", chargeRequest.getCvv());
+        return performPost("charge", requestBody, new GenericType<>() {});
     }
 
     @Override
