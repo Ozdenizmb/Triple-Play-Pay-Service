@@ -1,7 +1,7 @@
 package com.payment.service;
 
-import com.payment.model.ApiResponse;
-import com.payment.model.ProcessedTransaction;
+import com.payment.model.api.ApiResponse;
+import com.payment.model.api.ProcessedTransaction;
 import com.payment.model.request.ChargeRequest;
 
 import java.util.UUID;

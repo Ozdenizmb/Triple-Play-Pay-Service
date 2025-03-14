@@ -1,8 +1,8 @@
 package com.payment.controller;
 
 import com.payment.api.PaymentApi;
-import com.payment.model.ApiResponse;
-import com.payment.model.ProcessedTransaction;
+import com.payment.model.api.ApiResponse;
+import com.payment.model.api.ProcessedTransaction;
 import com.payment.model.request.ChargeRequest;
 import com.payment.service.PaymentService;
 import jakarta.ws.rs.core.Response;

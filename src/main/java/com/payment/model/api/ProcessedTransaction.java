@@ -1,4 +1,4 @@
-package com.payment.model;
+package com.payment.model.api;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
