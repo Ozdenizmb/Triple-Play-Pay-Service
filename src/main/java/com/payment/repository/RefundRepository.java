@@ -5,6 +5,7 @@ import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public interface RefundRepository {
     @SqlQuery(SELECT_REFUNDS)
     RefundPayment getRefunds();
 
-    @SqlQuery(DELETE_REFUND)
+    @SqlUpdate(DELETE_REFUND)
     Boolean deleteRefundById(@Bind("transactionId") UUID transactionId);
 
 }

@@ -2,6 +2,7 @@ package com.payment.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -11,7 +12,7 @@ public class ChargePayment {
 
     private UUID transactionId;
     private String method;
-    private Double amount;
+    private BigDecimal amount;
     private String currency;
     private LocalDate transactionDate;
     private LocalTime transactionTime;

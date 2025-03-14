@@ -5,6 +5,7 @@ import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import static com.payment.repository.sql.ChargeSql.SELECT_CHARGE_WITH_ID;
 public interface ChargeRepository {
 
     @SqlQuery(INSERT_CHARGE)
-    UUID save(@BindBean ChargePayment chargePayment);
+    UUID saveCharge(@BindBean ChargePayment chargePayment);
 
     @SqlQuery(SELECT_CHARGE_WITH_ID)
     ChargePayment getChargeById(@Bind("transactionId") UUID transactionId);
@@ -25,7 +26,7 @@ public interface ChargeRepository {
     @SqlQuery(SELECT_CHARGES)
     ChargePayment getCharges();
 
-    @SqlQuery(DELETE_CHARGE)
+    @SqlUpdate(DELETE_CHARGE)
     Boolean deleteChargeById(@Bind("transactionId") UUID transactionId);
 
 }

@@ -6,7 +6,7 @@ public class ChargeSql {
 
     public static final String INSERT_CHARGE = "INSERT INTO " +
             "util_sch.charge_payment(transaction_id, method, amount, currency, transaction_date, transaction_time, token, ip, card_type, card_last_four_digit, expiration_month, expiration_year, status) " +
-            "VALUES (:transactionId, :method, :amount, :currency, :transactionDate, :transactionTime, :token, :ip, :cardType, :cardLastFourDigit, :expirationMonth, :expirationYear, :status)";
+            "VALUES (:transactionId, :method, :amount, :currency, :transactionDate, :transactionTime, :token, :ip, :cardType, :cardLastFourDigit, :expirationMonth, :expirationYear, :status) RETURNING transaction_id";
 
     public static final String SELECT_CHARGE_WITH_ID = "SELECT * FROM util_sch.charge_payment " +
             "WHERE transaction_id = :transactionId";
