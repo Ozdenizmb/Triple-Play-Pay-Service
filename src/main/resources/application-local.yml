@@ -9,11 +9,10 @@ database:
   password: 159753
   url: jdbc:postgresql://localhost:5432/payment_api_learning
 
-flyway:
-  configuration:
-    flyway.postgresql.transactional.lock: false
-  locations:
-    - db/migration
+liquibase:
+  changelog: db/changelog/db.changelog-master.xml
+  contexts: local
+  defaultSchemaName: util_sch
 
 triplePlayPayApi:
   url: "https://sandbox.tripleplaypay.com/api"

@@ -1,0 +1,33 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2" author="mehmet baran ozdeniz">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS util_sch;
+        </sql>
+        <createTable tableName="refund_payment" schemaName="util_sch">
+            <column name="transaction_id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="method" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_transaction_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ip" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
