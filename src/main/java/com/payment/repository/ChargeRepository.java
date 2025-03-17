@@ -13,6 +13,7 @@ import static com.payment.repository.sql.ChargeSql.DELETE_CHARGE;
 import static com.payment.repository.sql.ChargeSql.INSERT_CHARGE;
 import static com.payment.repository.sql.ChargeSql.SELECT_CHARGES;
 import static com.payment.repository.sql.ChargeSql.SELECT_CHARGE_WITH_ID;
+import static com.payment.repository.sql.ChargeSql.UPDATE_CHARGE_STATUS;
 
 @RegisterBeanMapper(ChargePayment.class)
 public interface ChargeRepository {
@@ -25,6 +26,9 @@ public interface ChargeRepository {
 
     @SqlQuery(SELECT_CHARGES)
     ChargePayment getCharges();
+
+    @SqlQuery(UPDATE_CHARGE_STATUS)
+    ChargePayment updateChargeStatus(@Bind("transactionId") UUID transactionId);
 
     @SqlUpdate(DELETE_CHARGE)
     Boolean deleteChargeById(@Bind("transactionId") UUID transactionId);

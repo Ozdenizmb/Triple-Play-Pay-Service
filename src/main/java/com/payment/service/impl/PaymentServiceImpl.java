@@ -89,8 +89,8 @@ public class PaymentServiceImpl implements PaymentService {
                 ChargePayment chargePayment = ChargeMapper.toChargePayment(data);
                 chargeRepository.saveCharge(chargePayment);
             }
-            else if(Objects.equals(transactionName, "delete")) {
-                chargeRepository.deleteChargeById(data.getOriginalTransactionId());
+            else if(Objects.equals(transactionName, "update_status")) {
+                chargeRepository.updateChargeStatus(data.getOriginalTransactionId());
             }
             else {
                 throw ServiceException.withStatusAndMessage(Response.Status.INTERNAL_SERVER_ERROR, WRONG_TRANSACTION_NAME);
@@ -137,7 +137,7 @@ public class PaymentServiceImpl implements PaymentService {
          */
         if(responseApi.getStatus()) {
             changeDatabase("refund_payment", "insert", responseApi.getMessage());
-            changeDatabase("charge_payment", "delete", responseApi.getMessage());
+            changeDatabase("charge_payment", "update_status", responseApi.getMessage());
         }
 
         return responseApi;

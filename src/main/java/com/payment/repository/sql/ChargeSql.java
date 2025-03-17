@@ -13,6 +13,9 @@ public class ChargeSql {
 
     public static final String SELECT_CHARGES = "SELECT * FROM util_sch.charge_payment";
 
+    public static final String UPDATE_CHARGE_STATUS = "UPDATE util_sch.charge_payment SET status = false " +
+            "WHERE transaction_id = :transactionId RETURNING *";
+
     public static final String DELETE_CHARGE = "DELETE FROM util_sch.charge_payment WHERE transaction_id = :transactionId";
 
 }
