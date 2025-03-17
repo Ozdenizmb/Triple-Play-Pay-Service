@@ -15,7 +15,7 @@ liquibase:
   defaultSchemaName: util_sch
 
 triplePlayPayApi:
-  url: "https://sandbox.tripleplaypay.com/api"
+  url: "https://sandbox.tripleplaypay.com/api/"
   id: ${triplePlayPayId}
   apiKey: ${triplePlayPayApiKey}
   publicApiKey: ${triplePlayPayPublicApiKey}

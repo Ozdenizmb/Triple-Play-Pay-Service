@@ -1,9 +1,5 @@
 package com.payment.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
-import com.payment.exception.ApiException;
 import com.payment.exception.ServiceException;
 import com.payment.mapper.ChargeMapper;
 import com.payment.mapper.RefundMapper;
@@ -15,20 +11,18 @@ import com.payment.model.request.ChargeRequest;
 import com.payment.repository.ChargeRepository;
 import com.payment.repository.RefundRepository;
 import com.payment.service.PaymentService;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.Invocation;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.MediaType;
+import com.payment.service.api.TriplePlayPayApi;
 import jakarta.ws.rs.core.Response;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.payment.exception.ErrorMessages.BAD_REQUEST_TPP;
 import static com.payment.exception.ErrorMessages.WRONG_TABLE_NAME;
 import static com.payment.exception.ErrorMessages.WRONG_TRANSACTION_NAME;
 
@@ -37,50 +31,37 @@ public class PaymentServiceImpl implements PaymentService {
     private final ChargeRepository chargeRepository;
     private final RefundRepository refundRepository;
 
-    private final Client client;
-    private final String apiUrl;
+    private final TriplePlayPayApi triplePlayPayApi;
     private final String apiKey;
 
     public PaymentServiceImpl(ChargeRepository chargeRepository, RefundRepository refundRepository, String apiUrl, String apiKey) {
         this.chargeRepository = chargeRepository;
         this.refundRepository = refundRepository;
-        ObjectMapper mapper = new ObjectMapper();
-        this.client = ClientBuilder.newClient().register(new JacksonJsonProvider(mapper));
-        this.apiUrl = apiUrl;
         this.apiKey = apiKey;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(apiUrl)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+
+        this.triplePlayPayApi = retrofit.create(TriplePlayPayApi.class);
     }
 
-    private WebTarget target(String path) {
-        return client.target(apiUrl).path(path);
-    }
+    private <T> T performPost(String path, Map<String, Object> requestBody) {
+        try{
+            Call<ApiResponse<ProcessedTransaction>> call = triplePlayPayApi.performPost(path, apiKey, requestBody);
+            retrofit2.Response<ApiResponse<ProcessedTransaction>> response = call.execute();
 
-    private <T> T performPost(String path, Object requestBody, GenericType<T> responseType) {
-        WebTarget target = target(path);
-        Invocation.Builder builder = target
-                .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", apiKey);
+            if(!response.isSuccessful()){
+                String errorMessage = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                System.out.println("Error calling {}: {} " + path + " " + errorMessage);
+                throw ServiceException.withStatusAndMessage(Response.Status.INTERNAL_SERVER_ERROR, errorMessage);
+            }
 
-        System.out.println("You sent a request to this path:" + target.getUri());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonBody;
-
-        try {
-            jsonBody = objectMapper.writeValueAsString(requestBody);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing request body to JSON", e);
+            return (T) response.body();
+        } catch (Exception e) {
+            throw ServiceException.withStatusAndMessage(Response.Status.INTERNAL_SERVER_ERROR, BAD_REQUEST_TPP);
         }
-
-        Response response = builder.post(Entity.json(jsonBody));
-        //Response response = builder.get();
-
-        if(response.getStatus() >= 400) {
-            String errorMessage = response.readEntity(String.class);
-            System.out.println("Error calling {}: {} " + path + " " + errorMessage);
-            throw new ApiException("Error calling " + path + ": " + errorMessage, response);
-        }
-
-        return response.readEntity(responseType);
     }
 
     private void changeDatabase(String tableName, String transactionName, ProcessedTransaction data) {
@@ -119,7 +100,7 @@ public class PaymentServiceImpl implements PaymentService {
         requestBody.put("yy", chargeRequest.getExpirationYear());
         requestBody.put("cvv", chargeRequest.getCvv());
 
-        ApiResponse<ProcessedTransaction> responseApi = performPost("charge", requestBody, new GenericType<>() {});
+        ApiResponse<ProcessedTransaction> responseApi = performPost("charge", requestBody);
         changeDatabase("charge_payment", "insert", responseApi.getMessage());
         return responseApi;
     }
@@ -129,7 +110,7 @@ public class PaymentServiceImpl implements PaymentService {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", transactionId.toString());
 
-        ApiResponse<ProcessedTransaction> responseApi = performPost("void", requestBody, new GenericType<>() {});
+        ApiResponse<ProcessedTransaction> responseApi = performPost("void", requestBody);
 
         /*
          * If the value of responseApi.getStatus() is false, it means that a repeated operation is being performed,
