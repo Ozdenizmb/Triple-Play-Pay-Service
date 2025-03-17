@@ -1,5 +1,6 @@
 package com.payment;
 
+import com.payment.config.LiquibaseFactory;
 import com.payment.controller.PaymentController;
 import com.payment.repository.ChargeRepository;
 import com.payment.repository.RefundRepository;
@@ -8,10 +9,13 @@ import com.payment.service.impl.PaymentServiceImpl;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
-import org.flywaydb.core.Flyway;
+import liquibase.Liquibase;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
+import java.sql.Connection;
 import java.util.Objects;
 
 public class PaymentApplication extends Application<PaymentConfiguration> {
@@ -28,14 +32,12 @@ public class PaymentApplication extends Application<PaymentConfiguration> {
     @Override
     public void run(PaymentConfiguration configuration, Environment environment) throws Exception {
 
-        // Tables were created on the database with Flyway.
-        Flyway flyway = Flyway.configure()
-                .dataSource(configuration.getDatabase().getUrl(),
-                        configuration.getDatabase().getUser(),
-                        configuration.getDatabase().getPassword())
-                .locations(configuration.getFlyway().getLocations().toArray(new String[0]))
-                .load();
-        flyway.migrate();
+        // Tables were created on the database with Liquibase.
+        LiquibaseFactory liquibaseFactory = configuration.getLiquibase();
+        Connection connection = configuration.getDatabase().build(environment.metrics(), "liquibase").getConnection();
+        Liquibase liquibase = new Liquibase(liquibaseFactory.getChangelog(), new ClassLoaderResourceAccessor(), new JdbcConnection(connection));
+        liquibase.update(configuration.getLiquibase().getContexts());
+
 
         // JDBI was enabled in the relevant database.
         Jdbi jdbi = Jdbi.create(configuration.getDatabase().getUrl(),

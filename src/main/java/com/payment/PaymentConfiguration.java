@@ -1,10 +1,10 @@
 package com.payment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.payment.config.LiquibaseFactory;
 import com.payment.model.TriplePlayPayFactory;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.flyway.FlywayFactory;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -21,8 +21,8 @@ public class PaymentConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    @JsonProperty("flyway")
-    private FlywayFactory flyway;
+    @JsonProperty("liquibase")
+    private LiquibaseFactory liquibase;
 
     @Valid
     @NotNull
