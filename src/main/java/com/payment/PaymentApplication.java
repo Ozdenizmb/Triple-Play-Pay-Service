@@ -5,6 +5,7 @@ import com.payment.controller.PaymentController;
 import com.payment.repository.ChargeRepository;
 import com.payment.repository.RefundRepository;
 import com.payment.service.PaymentService;
+import com.payment.service.api.TriplePlayPayService;
 import com.payment.service.impl.PaymentServiceImpl;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
@@ -50,7 +51,8 @@ public class PaymentApplication extends Application<PaymentConfiguration> {
         RefundRepository refundRepository = jdbi.onDemand(RefundRepository.class);
 
         // Create Service
-        PaymentService paymentService = new PaymentServiceImpl(chargeRepository, refundRepository, configuration.getTriplePlayPayApi().getUrl(), configuration.getTriplePlayPayApi().getApiKey());
+        TriplePlayPayService triplePlayPayService = new TriplePlayPayService(configuration.getTriplePlayPayApi().getUrl(), configuration.getTriplePlayPayApi().getApiKey());
+        PaymentService paymentService = new PaymentServiceImpl(chargeRepository, refundRepository, triplePlayPayService);
 
         // Saving REST API resource
         environment.jersey().register(new PaymentController(paymentService));

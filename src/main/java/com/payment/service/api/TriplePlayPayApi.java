@@ -13,8 +13,13 @@ import java.util.Map;
 public interface TriplePlayPayApi {
 
     @POST("{path}")
-    Call<ApiResponse<ProcessedTransaction>> performPost(@Path("path") String path,
+    Call<ApiResponse<ProcessedTransaction>> postProcessedTransaction(@Path("path") String path,
                                                         @Header("Authorization") String apiKey,
                                                         @Body Map<String, Object> requestBody);
+
+    @POST("{path}")
+    Call<ApiResponse<String>> postString(@Path("path") String path,
+                                                @Header("Authorization") String apiKey,
+                                                @Body Map<String, Object> requestBody);
 
 }
